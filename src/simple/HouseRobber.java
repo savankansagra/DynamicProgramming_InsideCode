@@ -1,6 +1,5 @@
 package simple;
 
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
