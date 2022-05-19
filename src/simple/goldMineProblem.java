@@ -1,0 +1,115 @@
+package simple;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+public class goldMineProblem {
+	public static void main(String[] args) {
+		goldMineProblem goldMineProblemOb = new goldMineProblem();
+		
+		List<List<Integer>> mineList = new ArrayList<>();
+		
+		mineList.add(Arrays.asList(3,2,12,15,10));
+		mineList.add(Arrays.asList(6,19,7,11,17));
+		mineList.add(Arrays.asList(8,5,12,32,21));
+		mineList.add(Arrays.asList(3,20,2,9,7));
+		
+		int i = 0;
+		int j = 0;
+		int result = goldMineProblemOb.robRecursiveAllEntry(mineList);
+		System.out.println(result);
+		
+	}
+	
+	
+	private class twoKeyDataStructure {
+		int i;
+		int j;
+		
+		public twoKeyDataStructure(int i, int j) {
+			super();
+			this.i = i;
+			this.j = j;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getEnclosingInstance().hashCode();
+			result = prime * result + Objects.hash(i, j);
+			return result;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			twoKeyDataStructure other = (twoKeyDataStructure) obj;
+			if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
+				return false;
+			return i == other.i && j == other.j;
+		}
+		
+		public int getI() {
+			return i;
+		}
+		public int getJ() {
+			return j;
+		}
+		private goldMineProblem getEnclosingInstance() {
+			return goldMineProblem.this;
+		}
+		
+		
+		
+	}
+	
+
+	private int robRecursiveAllEntry(List<List<Integer>> mineList) {
+		int maxGold = 0;
+		int m = mineList.get(0).size();
+		int n = mineList.size();
+		
+		Map<twoKeyDataStructure, Integer> lookup = new HashMap<>();
+		
+		for(int k=0;k<n;k++) {
+			maxGold = Math.max(maxGold, robRecursive(mineList, 0, k, lookup));
+		}
+		
+		return maxGold;
+	}
+
+	private int robRecursive(List<List<Integer>> mineList, int i, int j, Map<twoKeyDataStructure, Integer> lookup) {
+		int m = mineList.get(0).size();
+		int n = mineList.size();
+		
+		//dynamic lookup for storing result of already calculated results.
+		twoKeyDataStructure tempOb = new twoKeyDataStructure(i, j);
+		if(lookup.containsKey(tempOb)) {
+			return lookup.get(tempOb);
+		}
+		
+		
+		//base case
+		if(i<0 || i>=n || j<0 || j>=m) {
+			return 0;
+		}
+		
+		else { 
+			int tempResult = mineList.get(i).get(j) + Math.max(robRecursive(mineList, i+1, j-1, lookup), 
+					Math.max(robRecursive(mineList, i+1, j, lookup), robRecursive(mineList, i+1, j+1, lookup))); 
+			lookup.put(tempOb, tempResult);
+			return tempResult;
+		}
+		
+	}
+}
