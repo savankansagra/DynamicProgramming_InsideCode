@@ -23,9 +23,53 @@ public class goldMineProblem {
 		int result = goldMineProblemOb.robRecursiveAllEntry(mineList);
 		System.out.println(result);
 		
+		
+		// calling the top down approach with tabulation
+		int resultTable = goldMineProblemOb.robUsingTable(mineList);
+		System.out.println(resultTable);
+		
+		
 	}
 	
 	
+	private int robUsingTable(List<List<Integer>> mineList) {
+		int n = mineList.size();
+		int m = mineList.get(0).size();
+		
+		int[][] table = new int[n][m];
+
+		for(int i=0;i<n;i++) {
+			for(int j=0;j<m;j++) {
+				
+				if(i<0 || j<0 || i>=n || j>=m ) {
+					continue;
+				}
+				else if(i==0) {
+					table[i][j] = mineList.get(i).get(j);
+				} 
+				else if(j==0) {
+					table[i][j] = mineList.get(i).get(j) + Math.max(table[i-1][j], table[i-1][j+1]);
+				} else if(j==m-1) {
+					table[i][j] = mineList.get(i).get(j) + Math.max(table[i-1][j-1], table[i-1][j]);
+				}
+				else {
+					table[i][j] = mineList.get(i).get(j) + Math.max(table[i-1][j-1], 
+							Math.max(table[i-1][j], table[i-1][j+1]));
+				}
+				
+			}
+		}
+		
+		//returing max value from last row
+		int result = 0;
+		for(int i=0;i<m;i++) {
+			result = Math.max(result, table[n-1][i]);
+		}
+		
+		return result;
+	}
+
+
 	private class twoKeyDataStructure {
 		int i;
 		int j;
